@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Audio Session 编程指南(一) | Wayne</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="iOS为我们的 APP 提供了一系列的方式去播放音频，常见的音频相关框架有 AVPlayer，AVAudioPlayer，AVAudioRecorder，AudioQueue 以及 Audio Unit。另外还有一个和音视频联系非常紧密的一个东西，就是 Audio Session。这个类本身并不参与控制音频的播放，它作为 iOS 设备播放音频策略的一个辅助工具并提供了以下几个主要功能：
+
+决定 A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Audio Session 编程指南(一)">
+<meta property="og:url" content="http://zhwayne.com/blog/2015/07/22/Audio-Session-编程指南-一/index.html">
+<meta property="og:site_name" content="Wayne">
+<meta property="og:description" content="iOS为我们的 APP 提供了一系列的方式去播放音频，常见的音频相关框架有 AVPlayer，AVAudioPlayer，AVAudioRecorder，AudioQueue 以及 Audio Unit。另外还有一个和音视频联系非常紧密的一个东西，就是 Audio Session。这个类本身并不参与控制音频的播放，它作为 iOS 设备播放音频策略的一个辅助工具并提供了以下几个主要功能：
+
+决定 A">
+<meta property="og:image" content="https://developer.apple.com/library/prerelease/ios/documentation/Audio/Conceptual/AudioSessionProgrammingGuide/Art/competing_audio_demands_2x.png">
+<meta property="og:image" content="http://zhwayne.com/blog/2015/07/22/Audio-Session-编程指南-一/1.png">
+<meta property="og:image" content="http://zhwayne.com/blog/2015/07/22/Audio-Session-编程指南-一/1.png">
+<meta property="og:image" content="http://zhwayne.com/blog/2015/07/22/Audio-Session-编程指南-一/2.gif">
+<meta property="og:updated_time" content="2016-07-13T05:39:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Audio Session 编程指南(一)">
+<meta name="twitter:description" content="iOS为我们的 APP 提供了一系列的方式去播放音频，常见的音频相关框架有 AVPlayer，AVAudioPlayer，AVAudioRecorder，AudioQueue 以及 Audio Unit。另外还有一个和音视频联系非常紧密的一个东西，就是 Audio Session。这个类本身并不参与控制音频的播放，它作为 iOS 设备播放音频策略的一个辅助工具并提供了以下几个主要功能：
+
+决定 A">
+  
+    <link rel="alternative" href="/atom.xml" title="Wayne" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Wayne</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://zhwayne.com/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Audio-Session-编程指南-一" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/07/22/Audio-Session-编程指南-一/" class="article-date">
+  <time datetime="2015-07-22T05:17:37.000Z" itemprop="datePublished">2015-07-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/iOS/">iOS</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Audio Session 编程指南(一)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>iOS为我们的 APP 提供了一系列的方式去播放音频，常见的音频相关框架有 AVPlayer，AVAudioPlayer，AVAudioRecorder，AudioQueue 以及 Audio Unit。另外还有一个和音视频联系非常紧密的一个东西，就是 Audio Session。这个类本身并不参与控制音频的播放，它作为 iOS 设备播放音频策略的一个辅助工具并提供了以下几个主要功能：</p>
+<ul>
+<li>决定 APP 的音频共存行为</li>
+<li>选择合适的音频设备</li>
+<li>音频的中断处理</li>
+</ul>
+<p>什么是“APP 的音频共存行为”？你应该注意到，当你在用网易云音乐播放一首喜欢的歌，然后进入酷狗查看最新的华语排行榜时，正在播放的歌曲自动暂停了。于是曰：“网易云和酷狗的音乐不能共存。”共存即同时播放，一般情况下你见不到两个同时播放不同音乐的 APP，同时播放两首歌不是很反人类么？</p>
+<a id="more"></a>
+<p>iOS 系统如何处理具有竞争性的音频需求？</p>
+<p>iOS 为每一个应用程序提供了一个 Audio Session，每个 Audio Session 单独参与各自 APP 的辅助管理。虽然我们一般用 <code>[AVAudioSession sharedInstance]</code>获取一个音频会话单例，这个单例只存在于我们创建的 APP 中。你可以试着创建两个 APP，在下面的方法中展示各自获取到的 Session，不难看出它们是两个不同的实例。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)applicationDidBecomeActive:(<span class="built_in">UIApplication</span> *)application &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *message = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%@"</span>, [<span class="built_in">AVAudioSession</span> sharedInstance]];</span><br><span class="line">    <span class="built_in">UIAlertView</span> *a = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="literal">nil</span></span><br><span class="line">                                                message:message</span><br><span class="line">                                               delegate:<span class="literal">nil</span></span><br><span class="line">                                      cancelButtonTitle:<span class="string">@"OK"</span></span><br><span class="line">                                      otherButtonTitles:<span class="literal">nil</span>, <span class="literal">nil</span>];</span><br><span class="line">    [a show];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>应用程序在启动时，iOS 为其提供一个应用内的全局 Session，在默认情况下，系统会自动激活这个 Session，但是苹果推荐我们明确显式地激活它。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSError</span> *activationError = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">BOOL</span> success = [[<span class="built_in">AVAudioSession</span> sharedInstance] setActive: <span class="literal">YES</span> error:&amp;activationError];</span><br><span class="line"><span class="keyword">if</span> (!success) &#123; <span class="comment">/* handle the error in activationError */</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>为什么需要激活？</p>
+<p>假设我正在用网易云音乐听《New Soul》这首歌，然后我切换到酷狗去听《Five Hundred Miles》。这时候酷狗需要向系统请求播放音频，而此时网易云正在欢乐地唱着歌，于是系统的 Core Audio 服务会暂停网易云的音频播放，让酷狗能安静深情地演唱。激活的目的就在于此，禁用其他 APP 的 Audio Session 以使自身的 Audio Session 处于活跃状态。<a href="https://developer.apple.com/library/prerelease/ios/documentation/Audio/Conceptual/AudioSessionProgrammingGuide/ConfiguringanAudioSession/ConfiguringanAudioSession.html#//apple_ref/doc/uid/TP40007875-CH2-SW7" target="_blank" rel="external">苹果官方文档</a>用了一个飞机场的例子形象地说明了这个问题。</p>
+<p><img src="https://developer.apple.com/library/prerelease/ios/documentation/Audio/Conceptual/AudioSessionProgrammingGuide/Art/competing_audio_demands_2x.png" alt=""></p>
+<p>我就是想同时播放两首歌怎么办？！</p>
+<p>你要是这么任性也没关系，要实现这个需求就必须再说说 Audio Session 的 Category。Category 是一个为你的 APP 定义了一套音频行为的 key，设置不同的 Category，APP 表现出来的音频行为也就不一样。具体来说，Category 有以下几个：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Categories</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">AVAudioSessionCategoryAmbient</td>
+<td style="text-align:left">只用于音频播放。<br>特点是允许其他应用程序播放音频，当 Audio Session 的 Active 设为 NO 时（即不激活 Session），你应该会听到两个 APP 同时播放声音。<br>注意，使用该 Category 的 APP 的音频会随着屏幕关闭、进入后台和开启静音键而中断。</td>
+</tr>
+<tr>
+<td style="text-align:left">AVAudioSessionCategorySoloAmbient</td>
+<td style="text-align:left">Audio Session 默认的 Category，只用于音频播放。<br>当 Category 设置为它时，不管 Session 是否被激活，其他 APP 的音频都会被中断（不允许音频共存）。<br>注意，使用该 Category 的 APP 的音频会随着屏幕关闭、进入后台和开启静音键而中断。</td>
+</tr>
+<tr>
+<td style="text-align:left">AVAudioSessionCategoryPlayback</td>
+<td style="text-align:left">只用于音频播放。<br>不允许音频共存。<br>允许后台播放，且忽略静音键作用。<br>注意，为了支持后台播放，你需要在应用程序的 info.plist 文件中正确设置 Required background modes。</td>
+</tr>
+<tr>
+<td style="text-align:left">AVAudioSessionCategoryRecord</td>
+<td style="text-align:left">只用于音频录制。<br>设置该 Category 后，除了来电铃声，闹钟或日历提醒之外的其它系统声音都不会被播放。该 Category 只提供单纯录音功能。</td>
+</tr>
+<tr>
+<td style="text-align:left">AVAudioSessionCategoryPlayAndRecord</td>
+<td style="text-align:left">用于音频播放和录制。<br>用于既需要播放声音又需要录音的应用，语音聊天应用（如微信）应该使用这个Category。如果你的应用需要用到 iPhone 上的听筒，该 Category是你唯一的选择，在该 Category 下声音的默认出口为听筒（在没有外接设备的情况下）。</td>
+</tr>
+<tr>
+<td style="text-align:left">AVAudioSessionCategoryAudioProcessing</td>
+<td style="text-align:left">只用于离线音频处理，即使用硬件编解码器处理音频，如离线音频格式转换。<br>该音频会话使用期间，不能播放和录制音频。<br>不过实测中并没有什么卵用，音频还是正常播，How?😧</td>
+</tr>
+<tr>
+<td style="text-align:left">AVAudioSessionCategoryMultiRoute</td>
+<td style="text-align:left">用于音频播放和录制。<br>它允许多个音频输入/输出，比如音频数据同时从耳机和 USB 接口中出来。好像也不怎么常用。</td>
+</tr>
+</tbody>
+</table>
+<p>看看，为了能够与其他音频共存，我们只能选<code>AVAudioSessionCategoryAmbient</code>这个。先来创建第一个 APP，它只负责播放一段音乐，支持后台，那么它的 Audio Session Category 可以指定为<code>AVAudioSessionCategoryPlayback</code>。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] setActive:<span class="literal">YES</span> error:&amp;error];</span><br><span class="line">    <span class="keyword">if</span> (error) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Get an active error: %@"</span>, error<span class="variable">.description</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    error = <span class="literal">nil</span>;</span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] setCategory:<span class="built_in">AVAudioSessionCategoryPlayback</span> error:&amp;error];</span><br><span class="line">    <span class="keyword">if</span> (error) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Get a category error: %@"</span>, error<span class="variable">.description</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span><span class="variable">.player</span> = [[<span class="built_in">AVAudioPlayer</span> alloc] initWithContentsOfURL:[[<span class="built_in">NSBundle</span> mainBundle] URLForResource:<span class="string">@"1"</span> withExtension:<span class="string">@"mp3"</span>] error:<span class="literal">nil</span>];</span><br><span class="line">    [<span class="keyword">self</span><span class="variable">.player</span> play];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 info.plist 文件中设置<code>Required background modes</code>为<code>App plays audio or streams audio/video using AirPlay</code>避免程序进入后台后音乐中断。</p>
+<p>运行它，美妙音乐响起，然后在音乐声中创建第二个 APP。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line">    <span class="comment">// 注意设置为 NO，强制不激活。</span></span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] setActive:<span class="literal">NO</span> error:&amp;error];</span><br><span class="line">    <span class="keyword">if</span> (error) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Get an active error: %@"</span>, error<span class="variable">.description</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    error = <span class="literal">nil</span>;</span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] setCategory:<span class="built_in">AVAudioSessionCategoryAmbient</span> error:&amp;error];</span><br><span class="line">    <span class="keyword">if</span> (error) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Get a category error: %@"</span>, error<span class="variable">.description</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">self</span><span class="variable">.player</span> = [[<span class="built_in">AVAudioPlayer</span> alloc] initWithContentsOfURL:[[<span class="built_in">NSBundle</span> mainBundle] URLForResource:<span class="string">@"2"</span> withExtension:<span class="string">@"mp3"</span>] error:<span class="literal">nil</span>];</span><br><span class="line">    [<span class="keyword">self</span><span class="variable">.player</span> play];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行以后，就能听见两首歌在群魔乱舞了。</p>
+<p>APP 的音频共存行为先说到这里，本文并不作为官方文档的中文翻译，详细技术还需查阅<a href="https://developer.apple.com/library/prerelease/ios/documentation/Audio/Conceptual/AudioSessionProgrammingGuide/AudioSessionBasics/AudioSessionBasics.html#//apple_ref/doc/uid/TP40007875-CH3-SW1" target="_blank" rel="external">原文</a>。</p>
+<p>补充：</p>
+<p>如何优雅的请求录音权限？</p>
+<p>从 iOS 7 开始，我们的 APP 需要录音必须获得用户的授权。如果程序中开始了录音，系统会自动提示用户是否需要授权。</p>
+<img src="/2015/07/22/Audio-Session-编程指南-一/1.png" alt=" This is an example image []" title=" This is an example image []">
+<p><img src="/2015/07/22/Audio-Session-编程指南-一/1.png" alt=""></p>
+<p>出现这个提示后，录音会被暂时阻塞，直到用户确认授权。如果点击了不允许，以后只能在设置里重新手动授权。这样用户没有一点心里准备，你应该在授权之前告知用户授权的目的，很显然我们不能修改系统的这个提示框，我们需要自己掌控系统何时会弹出这个授权提示框，用<code>requestRecordPermission:</code>方法可以帮我们实现，这里有一个很简单的 Demo。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#import <span class="title">"ViewController.h"</span></span></span><br><span class="line"><span class="preprocessor">#import <span class="title">&lt;AVFoundation/AVFoundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">AVAudioSessionRequestRecordPermissionDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@required</span></span><br><span class="line">- (<span class="keyword">void</span>)didRequestedRecordPermission:(<span class="built_in">BOOL</span>)result;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line">&lt;</span><br><span class="line"><span class="built_in">UIAlertViewDelegate</span>,</span><br><span class="line"><span class="built_in">AVAudioSessionRequestRecordPermissionDelegate</span></span><br><span class="line">&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">AVAudioRecorder</span> *recorder;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span>&lt;<span class="built_in">AVAudioSessionRequestRecordPermissionDelegate</span>&gt; permissionDelegate;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span><span class="variable">.permissionDelegate</span> = <span class="keyword">self</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">@try</span> &#123;</span><br><span class="line">        [<span class="keyword">self</span> configAudioSession];</span><br><span class="line">        [<span class="keyword">self</span> requestRecordPermission];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@catch</span> (<span class="built_in">NSException</span> *exception) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, exception<span class="variable">.name</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)configAudioSession</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] setActive:<span class="literal">YES</span></span><br><span class="line">                                         error:&amp;error];</span><br><span class="line">    <span class="keyword">if</span> (error) &#123;</span><br><span class="line">        <span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="string">@"Active error"</span></span><br><span class="line">                                       reason:error<span class="variable">.description</span></span><br><span class="line">                                     userInfo:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    error = <span class="literal">nil</span>;</span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] setCategory:<span class="built_in">AVAudioSessionCategoryPlayAndRecord</span></span><br><span class="line">                                           error:&amp;error];</span><br><span class="line">    <span class="keyword">if</span> (error) &#123;</span><br><span class="line">        <span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="string">@"Category error"</span></span><br><span class="line">                                       reason:error<span class="variable">.description</span></span><br><span class="line">                                     userInfo:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)requestRecordPermission</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> ([<span class="built_in">AVAudioSession</span> sharedInstance]<span class="variable">.recordPermission</span>) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="built_in">AVAudioSessionRecordPermissionUndetermined</span>: &#123;</span><br><span class="line">            <span class="comment">// 第一次运行 APP，待定状态</span></span><br><span class="line">            <span class="built_in">UIAlertView</span> *a = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@"授权提示"</span></span><br><span class="line">                                                        message:<span class="string">@"你需要授权该 APP 获取音频权限才能录音。"</span></span><br><span class="line">                                                       delegate:<span class="keyword">self</span></span><br><span class="line">                                              cancelButtonTitle:<span class="string">@"好的，我知道了"</span></span><br><span class="line">                                              otherButtonTitles:<span class="literal">nil</span>, <span class="literal">nil</span>];</span><br><span class="line">            [a show];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> <span class="built_in">AVAudioSessionRecordPermissionDenied</span>:</span><br><span class="line">            <span class="comment">// 被拒绝过了</span></span><br><span class="line">            [<span class="keyword">self</span><span class="variable">.permissionDelegate</span> didRequestedRecordPermission:<span class="literal">NO</span>];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">case</span> <span class="built_in">AVAudioSessionRecordPermissionGranted</span>: &#123;</span><br><span class="line">            <span class="comment">// 已经被允许</span></span><br><span class="line">            [<span class="keyword">self</span><span class="variable">.permissionDelegate</span> didRequestedRecordPermission:<span class="literal">YES</span>];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)startRecord</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span><span class="variable">.recorder</span> = [[<span class="built_in">AVAudioRecorder</span> alloc] initWithURL:[<span class="built_in">NSURL</span> fileURLWithPath:<span class="built_in">NSHomeDirectory</span>()]</span><br><span class="line">                                                settings:<span class="literal">nil</span></span><br><span class="line">                                                   error:<span class="literal">nil</span>];</span><br><span class="line">    [<span class="keyword">self</span><span class="variable">.recorder</span> record];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#pragma mark - UIAlertViewDelegate</span></span><br><span class="line">- (<span class="keyword">void</span>)alertView:(<span class="built_in">UIAlertView</span> *)alertView clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex</span><br><span class="line">&#123;</span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] requestRecordPermission:^(<span class="built_in">BOOL</span> granted) &#123;</span><br><span class="line">        [<span class="keyword">self</span><span class="variable">.permissionDelegate</span> didRequestedRecordPermission:granted];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#pragma mark - AVAudioSessionRequestRecordPermissionDelegate</span></span><br><span class="line">- (<span class="keyword">void</span>)didRequestedRecordPermission:(<span class="built_in">BOOL</span>)result</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (result) &#123;</span><br><span class="line">        <span class="comment">// Granted</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Granted"</span>);</span><br><span class="line">        [<span class="keyword">self</span> startRecord];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Denied</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Denied"</span>);</span><br><span class="line">        <span class="built_in">UIAlertView</span> *a = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="literal">nil</span></span><br><span class="line">                                                    message:<span class="string">@"没有录音权限，去设置里开启。"</span></span><br><span class="line">                                                   delegate:<span class="literal">nil</span></span><br><span class="line">                                          cancelButtonTitle:<span class="string">@"取消"</span></span><br><span class="line">                                          otherButtonTitles: <span class="literal">nil</span>, <span class="literal">nil</span>];</span><br><span class="line">        [a show];   <span class="comment">// 这个提示框可能要等几秒钟才出来，原因不详。</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2015/07/22/Audio-Session-编程指南-一/2.gif" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://zhwayne.com/blog/2015/07/22/Audio-Session-编程指南-一/" data-id="ciqkhidvi0002gam2ikn17sak" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Audio/">Audio</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/iOS/">iOS</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Audio/">Audio</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Audio/" style="font-size: 10px;">Audio</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/07/22/Audio-Session-编程指南-一/">Audio Session 编程指南(一)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Wayne<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
