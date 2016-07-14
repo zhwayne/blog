@@ -1,0 +1,663 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="现存的 iOS 7/8/9 采用了沉浸式状态栏设计，而且状态栏风格主要以黑白二色为主，比如礼物说和佳学两款 APP 分别采用了这两种不同的设计。
+
+
+Note: 一般而言，深色背景导航栏会搭配白色状态栏，浅色背景的则会搭配深色状态栏。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="状态栏风格及用法简述">
+<meta property="og:url" content="http://zhwayne.com/blog/2015/12/16/状态栏风格及用法简述/index.html">
+<meta property="og:site_name" content="Wayne">
+<meta property="og:description" content="现存的 iOS 7/8/9 采用了沉浸式状态栏设计，而且状态栏风格主要以黑白二色为主，比如礼物说和佳学两款 APP 分别采用了这两种不同的设计。
+
+
+Note: 一般而言，深色背景导航栏会搭配白色状态栏，浅色背景的则会搭配深色状态栏。">
+<meta property="og:image" content="https://github.com/zhwayne/blog_resource/blob/gh-pages/2015/12/1.png?raw=true">
+<meta property="og:image" content="https://github.com/zhwayne/blog_resource/blob/gh-pages/2015/12/2.png?raw=true">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/548687-8d11bbb6acb1f7a5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/548687-18ec6af61b31c72b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/548687-22dc7d10045741ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/548687-38c88d3a39031a6a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/568">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/548687-97bdb8d93321973b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UINavigationController_Class/Art/nav_controllers_objects.jpg">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/548687-c9a24ab55aab8319.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/548687-6dd589c9ee8c5c56.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/548687-2226be14455b06d0.gif?imageMogr2/auto-orient/strip">
+<meta property="og:updated_time" content="2016-07-14T04:51:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="状态栏风格及用法简述">
+<meta name="twitter:description" content="现存的 iOS 7/8/9 采用了沉浸式状态栏设计，而且状态栏风格主要以黑白二色为主，比如礼物说和佳学两款 APP 分别采用了这两种不同的设计。
+
+
+Note: 一般而言，深色背景导航栏会搭配白色状态栏，浅色背景的则会搭配深色状态栏。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zhwayne.com/blog/2015/12/16/状态栏风格及用法简述/"/>
+
+  <title> 状态栏风格及用法简述 | Wayne </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Wayne</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                状态栏风格及用法简述
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-12-16T17:49:15+08:00" content="2015-12-16">
+              2015-12-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>现存的 iOS 7/8/9 采用了沉浸式状态栏设计，而且状态栏风格主要以黑白二色为主，比如<strong>礼物说</strong>和<strong>佳学</strong>两款 APP 分别采用了这两种不同的设计。</p>
+<p><img src="https://github.com/zhwayne/blog_resource/blob/gh-pages/2015/12/1.png?raw=true" alt=""><img src="https://github.com/zhwayne/blog_resource/blob/gh-pages/2015/12/2.png?raw=true" alt=""></p>
+<blockquote>
+<p>Note: 一般而言，深色背景导航栏会搭配白色状态栏，浅色背景的则会搭配深色状态栏。</p>
+</blockquote>
+<a id="more"></a>
+<p>iOS 9 以前我们一般在项目 info.plist 文件中将<code>UIViewControllerBasedStatusBarAppearance</code>键设为 NO，然后在适当的视图控制器中使用下面的代码设置状态栏风格：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 设置白色状态栏</span></span><br><span class="line"><span class="attr_selector">[[UIApplication sharedApplication]</span> <span class="tag">setStatusBarStyle</span><span class="pseudo">:UIStatusBarStyleLightContent</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 设置黑色状态栏</span></span><br><span class="line"><span class="attr_selector">[[UIApplication sharedApplication]</span> <span class="tag">setStatusBarStyle</span><span class="pseudo">:UIStatusBarStyleDefault</span>];</span><br></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/548687-8d11bbb6acb1f7a5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="UIViewControllerBasedStatusBarAppearance"></p>
+<p>一切似乎很美好。</p>
+<p>然而在 iOS 9（Xcode 7）中上述方法会引起一个警告，苹果不再建议使用旧方法，我们需要重载视图控制器的<code>+preferredStatusBarStyle</code>方法去设置状态栏风格：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/548687-18ec6af61b31c72b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Setting the statusBarStyle does nothing if your application is using the default UIViewController-based status bar system.</span></span><br><span class="line"><span class="variable">@available</span>(iOS, introduced=<span class="number">2.0</span>, deprecated=<span class="number">9.0</span>, message=<span class="string">"Use -[UIViewController preferredStatusBarStyle]"</span>)</span><br><span class="line">public var <span class="attribute">statusBarStyle</span>: UIStatusBarStyle</span><br><span class="line"><span class="variable">@available</span>(iOS, introduced=<span class="number">2.0</span>, deprecated=<span class="number">9.0</span>, message=<span class="string">"Use -[UIViewController preferredStatusBarStyle]"</span>)</span><br><span class="line">public func <span class="function">setStatusBarStyle</span>(<span class="attribute">statusBarStyle</span>: UIStatusBarStyle, <span class="attribute">animated</span>: Bool)</span><br></pre></td></tr></table></figure>
+<p>那么现在爽快地把项目 info.plist 文件中的<code>UIViewControllerBasedStatusBarAppearance</code>键设为 NO，或者删除吧。别忘了把你项目中的<code>setStatusBarStyle</code>也一并删除。我将向你演示如何优雅的设置状态栏风格。</p>
+<hr>
+<p>新建一个工程，设置 view controller 背景色为水蓝色，并重载 <code>preferredStatusBarStyle()</code> 方法。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">    <span class="keyword">self</span>.view.backgroundColor = <span class="type">UIColor</span>.<span class="keyword">init</span>(colorLiteralRed: <span class="number">0.157</span>, green: <span class="number">0.694</span>, blue: <span class="number">1</span>, alpha: <span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">preferredStatusBarStyle</span><span class="params">()</span></span> -&gt; <span class="type">UIStatusBarStyle</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> .<span class="type">LightContent</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/548687-22dc7d10045741ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="白色状态栏"></p>
+<p>效果看起来不错吧🤓。然而接下来会有一个问题，如下图。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/548687-38c88d3a39031a6a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/568" alt="View controller embed in a navigation controller"></p>
+<p>编译运行项目，这种情况下你会发现上述方法失效，状态栏又变黑色了：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/548687-97bdb8d93321973b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="状态栏又变黑色了"></p>
+<p>其实并不算是失效了，我们不妨来看看<code>preferredStatusBarStyle()</code>的定义：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// These methods control the attributes of the status bar when this view controller is shown. They can be overridden in view controller subclasses to return the desired status bar attributes.</span></span><br><span class="line">@available(iOS <span class="number">7.0</span>, *)</span><br><span class="line">public <span class="func"><span class="keyword">func</span> <span class="title">preferredStatusBarStyle</span><span class="params">()</span></span> -&gt; <span class="type">UIStatusBarStyle</span> <span class="comment">// Defaults to UIStatusBarStyleDefault</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>大意是说当 view controller 显示的时候，这个方法可以用来控制状态栏的属性。你可以在 UIViewController 的子类中重载该方法返回你期望的状态栏属性。</p>
+</blockquote>
+<p>那为什么我现在重载该方法却不起作用呢？事实上<code>preferredStatusBarStyle()</code>根本未被调用。原因能是 UINavigationController 作为一个容器“承包”了这些事情。我们所添加的 view controller 都在它的导航栈中，可以说这些控制器都是导航栏控制器的<code>child view controller</code>。此时导航栏控制器才是真正能操作状态栏的 Boss。</p>
+<p><img src="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UINavigationController_Class/Art/nav_controllers_objects.jpg" alt="Objects managed by the navigation controller(Image from: [Apple](http://developer.apple.com))"></p>
+<p>为了验证一可能性，我把原先 view controller 中的<code>preferredStatusBarStyle()</code>方法删除，然后实例化一个<code>UINavigationController</code>的子类<code>NavigationController</code>，在 Storyboard 中将其关联到导航栏控制器上且设置了naviagation bar 的 bar tint color 便于区分，最后在 <code>NavigationController</code> 中重载<code>preferredStatusBarStyle()</code>方法。我终于得到了想要的结果。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/548687-c9a24ab55aab8319.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="在NavigationController重载preferredStatusBarStyle()方法"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/548687-6dd589c9ee8c5c56.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="正确的结果"></p>
+<p>另外，我们可能遇到这样一个需求：在导航栈中的第一个 view controller 里的状态栏为白色，第二个 view controller 里的状态栏为黑色。上面这种在导航栏控制器中控制状态栏属性的一刀切的粗暴做法显然不符合我们的要求，那么这里有另外一个方法 :</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Override to return a child view controller or nil. If non-nil, that view controller's status bar appearance attributes will be used. If nil, self is used. Whenever the return values from these methods change, -setNeedsUpdatedStatusBarAttributes should be called.</span></span><br><span class="line">@available(iOS <span class="number">7.0</span>, *)</span><br><span class="line">public <span class="func"><span class="keyword">func</span> <span class="title">childViewControllerForStatusBarStyle</span><span class="params">()</span></span> -&gt; <span class="type">UIViewController</span>?</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>大意是，如果这个方法返回值为 non-nil，则将更改状态栏属性的控制权移交给你返回的那个控制器。如果返回值为 nil 或者不重载该方法，那么由自己负责控制状态栏的属性。当状态栏的样式被更改之前，该控制器的<code>-setNeedsUpdatedStatusBarAttributes</code>方法应该被调用。</p>
+</blockquote>
+<p>前面几句很好理解，最后一句是什么意思呢？</p>
+<p>如果在该 UIViewControlle r已经在显示在当前，你可能还要在当前页面不时的更改状态栏的 style，那么你需要先调用<code>-setNeedsStatusBarAppearanceUpdate</code>方法（它通知系统去调用当前UIViewController 的<code>-preferredStatusBarStyle</code>方法)。</p>
+<p>要实现我们的需求，就只能在<code>NavigationController</code>中重载<code>-childViewControllerForStatusBarStyle</code>方法，既然它返回一个视图控制器的实例，那么我们只要将导航栈中的<code>topViewController</code>作为返回值（该方法会被调用多次，且每次~~设置状态栏 style ~~push/pop view controller 该方法都会被调用），然后在需要设置状态栏 style 的 view controller 中像最开始一样重载<code>-preferredStatusBarStyle</code>方法即可。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">childViewControllerForStatusBarStyle</span><span class="params">()</span></span> -&gt; <span class="type">UIViewController</span>? &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>.topViewController</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/548687-2226be14455b06d0.gif?imageMogr2/auto-orient/strip" alt="最终效果"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/22/Audio-Session-编程指南-一/" rel="next" title="Audio Session 编程指南(一)">
+                <i class="fa fa-chevron-left"></i> Audio Session 编程指南(一)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+          <p class="site-description motion-element" itemprop="description">Show me</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
